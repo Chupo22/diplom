@@ -1,0 +1,22 @@
+{
+  "name": "diplom",
+  "version": "1.0.0",
+  "description": "my diplom",
+  "main": "index.js",
+  "scripts": {
+    "test": "test command there"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://vh118139@kuz-diplom.prof-line.ru:22//var/www/vh118139/data/www/kuz-diplom.prof-line.ru"
+  },
+  "author": "Chupo22",
+  "license": "ISC",
+  "dependencies": {
+    "del": "^2.2.0",
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.6.0",
+    "merge2": "^1.0.1",
+    "typescript": "^1.7.5"
+  }
+}

@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "ES5",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "jsx": "react",
+        "outDir": "src"
+    },
+    "files": [
+        "src/bootstrap.tsx",
+        "src/AuthForm.tsx"
+    ]
+}

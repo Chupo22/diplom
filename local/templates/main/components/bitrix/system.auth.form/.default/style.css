@@ -1,0 +1,5 @@
+#auth-form {margin-top: 28px;}
+#auth-form .logout-label{width: 146px; padding-left: 0;}
+#auth-form .close {margin: 2px; margin-top:5px}
+#auth-form .user-remember {height: 13px;margin-top: -3px;}
+#auth-form label {font-weight: normal;}
