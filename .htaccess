@@ -32,10 +32,3 @@ ErrorDocument 404 /404.php
   ExpiresByType application/x-font-ttf "access plus 3 day"
   ExpiresByType application/javascript "access plus 3 day"  
 </IfModule>
-
-
-#<FilesMatch ".(flv|gif|jpg|jpeg|png|ico|swf|js|css|pdf)$">
-<FilesMatch ".(ttf)$">
-  # 30 дней
-  Header set Cache-Control "max-age=2592000"
-</FilesMatch>
