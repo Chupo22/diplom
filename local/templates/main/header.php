@@ -12,7 +12,6 @@
 		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH.'/inline.images.css');
 		$APPLICATION->SetAdditionalCSS('/local/src/css/animate.css');
 		
-		//$APPLICATION->AddHeadScript('/local/src/js/require.js');
 		$APPLICATION->AddHeadScript('/local/src/js/jquery-2.2.0.min.js');
 		$APPLICATION->AddHeadScript('/local/src/js/react.min.js');
 		$APPLICATION->AddHeadScript('/local/src/js/react-dom.min.js');
@@ -53,3 +52,5 @@
 			</div>
 			<div class="page">
 				<div class="main_width">
+					<?$APPLICATION->IncludeComponent('bitrix:menu', 'left',array(),false);?>
+					<div id="content">

@@ -1,8 +1,10 @@
-		</div>
+				</div>
+			</div>
+			<div style="clear:both;"></div>
 			</div>
 			<div class="footer posRel">
 				<div class="main_width">
-					<div class="nav">
+					<div class="nav fotter">
 						<ul>
 							<li><a href="">Documentation</a></li>
 							<li><a href="">Laracasts</a></li>
