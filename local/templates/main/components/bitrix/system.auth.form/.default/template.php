@@ -2,7 +2,14 @@
 <?global $USER;?>
 <div id="auth-form-container" style="float: right;"></div>
 
-
+<script>
+	var params = JSON.parse('<?=json_encode([
+		'login' => $arResult['USER_LOGIN'],
+		'isAuthorized' => $USER->isAuthorized(),
+		'userName' => $arResult['USER_NAME']
+	])?>');
+	components.initAuthForm(params);
+</script>
 
 
 <?/*if($arResult["FORM_TYPE"] == "login"):?>

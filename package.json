@@ -13,11 +13,15 @@
   "author": "Chupo22",
   "license": "ISC",
   "dependencies": {
-    "del": "^2.2.0",
-    "gulp": "^3.8.11",
-    "gulp-concat": "^2.6.0",
-    "gulp-typescript": "^2.12.1",
-    "merge2": "^1.0.1",
-    "typescript": "^1.7.5"
+    "highlight.js": "^9.2.0",
+    "jquery2": "^2.0.3-a",
+    "react": "^0.14.8",
+    "react-bootstrap": "^0.28.5",
+    "react-dom": "^0.14.8"
+  },
+  "devDependencies": {
+    "typescript": "^1.8.9",
+    "webpack": "^1.12.14",
+    "webpack-typescript": "^0.5.6"
   }
 }

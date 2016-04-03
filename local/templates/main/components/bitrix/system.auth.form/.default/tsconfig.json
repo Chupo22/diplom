@@ -9,7 +9,6 @@
         "outDir": "src"
     },
     "files": [
-        "src/bootstrap.tsx",
         "src/AuthForm.tsx"
     ]
 }

@@ -1,0 +1,2 @@
+<?
+$MESS["empty"] = "empty";

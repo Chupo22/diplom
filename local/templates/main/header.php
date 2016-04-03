@@ -11,20 +11,9 @@
 		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH.'/font.SourceSansProRegular.css');
 		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH.'/inline.images.css');
 		$APPLICATION->SetAdditionalCSS('/local/src/css/animate.css');
-		
-		$APPLICATION->AddHeadScript('/local/src/js/jquery-2.2.0.min.js');
-		$APPLICATION->AddHeadScript('/local/src/js/react.min.js');
-		$APPLICATION->AddHeadScript('/local/src/js/react-dom.min.js');
-		$APPLICATION->AddHeadScript('/local/src/js/react-kostil.js');
-
+		$APPLICATION->SetAdditionalCSS('/node_modules/highlight.js/styles/default.css');
 		?>
-		<script type="text/javascript">
-			//$(function(){
-			//	$(".dropdown").click(function() {
-			//		$(this).parent().toggleClass("open");
-			//	 })
-			//});
-		</script>
+		<script src="/local/templates/main/bundle.js"></script>
 		<title><?$APPLICATION->ShowTitle()?></title>
 	</head>
 	<body>

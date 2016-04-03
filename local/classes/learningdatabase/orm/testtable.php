@@ -18,6 +18,10 @@ class TestTable extends Entity\DataManager
 				'autocomplete' => true
 			]),
             new Entity\StringField('NAME'),
+            new Entity\StringField('CODE', [
+				'required' => true,
+				'unique' => true
+			]),
         ];
     }
 }
