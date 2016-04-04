@@ -10,3 +10,5 @@ spl_autoload_register(function ($class){
 		include_once $fileName;
     }
 });
+
+file_exists($_SERVER['DOCUMENT_ROOT'].'/local/php_interface/defines.php') && include('defines.php');
