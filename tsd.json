@@ -6,13 +6,19 @@
   "bundle": "local/src/typings/tsd.d.ts",
   "installed": {
     "jquery/jquery.d.ts": {
-      "commit": "99c4fb76b5d941939ba53e61d0daee4bd74f150f"
+      "commit": "247e8d48404d11f3aff85dea5029413229e0fc36"
     },
     "react/react.d.ts": {
       "commit": "99c4fb76b5d941939ba53e61d0daee4bd74f150f"
     },
     "react/react-dom.d.ts": {
       "commit": "99c4fb76b5d941939ba53e61d0daee4bd74f150f"
+    },
+    "lodash/lodash.d.ts": {
+      "commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+    },
+    "node/node.d.ts": {
+      "commit": "247e8d48404d11f3aff85dea5029413229e0fc36"
     }
   }
 }

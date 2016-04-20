@@ -5,6 +5,5 @@ $APPLICATION->SetPageProperty("NOT_SHOW_NAV_CHAIN", "Y");
 $APPLICATION->SetTitle("Главная страница");
 ?>
 
-<?$APPLICATION->IncludeComponent('custom:exercise', '',array(),false);?>
 
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

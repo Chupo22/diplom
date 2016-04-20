@@ -1,43 +1,43 @@
 <?require($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_before.php');
-use LearningDatabase\ORM\Setup;
+use AutomatedTestingSystem\ORM\Setup;
 
 Setup::resetDataBases();
 
 $setup = new Setup();
 $setup->setTests([
-	['CODE' => 'select'				, 'NAME' => 'SELECT ... FROM ... WHERE',],
-	['CODE' => 'select-functions'	, 'NAME' => 'SELECT AVG(...), MIN(...), MAX(...), COUNT(...), SUM(...)',],
-	['CODE' => 'group-by'			, 'NAME' => 'GROUP BY',],
-	['CODE' => 'join'				, 'NAME' => 'JOIN',],
-	['CODE' => 'sub-queries'		, 'NAME' => 'sub queries',],
+	['code' => 'select'				, 'name' => 'SELECT ... FROM ... WHERE',],
+	['code' => 'select-functions'	, 'name' => 'SELECT AVG(...), MIN(...), MAX(...), COUNT(...), SUM(...)',],
+	['code' => 'group-by'			, 'name' => 'GROUP BY',],
+	['code' => 'join'				, 'name' => 'JOIN',],
+	['code' => 'sub-queries'		, 'name' => 'sub queries',],
 ]);
 
 $setup->setConditions([
-	['CODE' => 'MORE',			'NAME' => 'Больше'],
-	['CODE' => 'LESS',			'NAME' => 'Меньше'],
-	['CODE' => 'EQUALLY',		'NAME' => 'Равно'],
+	['code' => 'MORE',			'name' => 'Больше'],
+	['code' => 'LESS',			'name' => 'Меньше'],
+	['code' => 'EQUALLY',		'name' => 'Равно'],
 	
-	['CODE' => 'PARTIAL_MATCH',	'NAME' => 'Частичное совпадение'],
-	['CODE' => 'FULL_MATCH',	'NAME' => 'Полное совпадение'],
+	['code' => 'PARTIAL_MATCH',	'name' => 'Частичное совпадение'],
+	['code' => 'FULL_MATCH',	'name' => 'Полное совпадение'],
 ]);
 
 $setup->setExercises([
 	'select' => [
 		['TASKS' => [
-			['TABLE' => 'dept_emp', 'COLUMN' => 'emp_no', 'CONDITION' => 'MORE',		'VALUE' => '10014']
+			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'MORE',		'value' => '10014']
 		]],
 		['TASKS' => [
-			['TABLE' => 'dept_emp', 'COLUMN' => 'emp_no', 'CONDITION' => 'LESS',		'VALUE' => '10014']
+			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'LESS',		'value' => '10014']
 		]],
 		['TASKS' => [
-			['TABLE' => 'dept_emp', 'COLUMN' => 'emp_no', 'CONDITION' => 'EQUALLY',	'VALUE' => '10014']
+			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'EQUALLY',	'value' => '10014']
 		]],
 		['TASKS' => [
-			['TABLE' => 'dept_emp', 'COLUMN' => 'emp_no', 'CONDITION' => 'EQUALLY',	'VALUE' => '']
+			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'EQUALLY',	'value' => '']
 		]],
 		['TASKS' => [
-			['TABLE' => 'dept_emp', 'COLUMN' => 'emp_no', 'CONDITION' => 'EQUALLY',	'VALUE' => ''],
-			['TABLE' => 'dept_emp', 'COLUMN' => 'emp_no', 'CONDITION' => 'LESS',	'VALUE' => '']
+			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'EQUALLY',	'value' => ''],
+			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'LESS',	'value' => '']
 		]],
 		//['TASKS' => [
 		//	['TABLE' => 'salaries', 'COLUMN' => '', 'CONDITION' => '',	'VALUE' => ''],
@@ -46,3 +46,4 @@ $setup->setExercises([
 	]
 ]);
 
+$setup->setUser();

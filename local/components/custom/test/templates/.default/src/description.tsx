@@ -1,13 +1,17 @@
 ///<reference path="include.d.ts"/>
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import {IProps} from './test';
+import {ITable} from "./test";
+// import * as ReactDOM from 'react-dom';
+// import {IProps} from './test';
 
+interface IProps{
+	tables: ITable[]
+	dbName: string
+}
 
 interface IState{
-	
 }
-export class Description extends React.Component<IProps, {}> {
+export class Description extends React.Component<IProps, IState> {
 	state:IState = {};
 	
 	constructor() {
@@ -15,6 +19,7 @@ export class Description extends React.Component<IProps, {}> {
 	}
 	
 	render() {
+		console.log('render -description');
 		return (
 			<div>
 				<b>Краткая информация о базе данных "{this.props.dbName}":</b>
@@ -30,7 +35,6 @@ export class Description extends React.Component<IProps, {}> {
 					})
 				}
 				
-				Тут должно быть описание. Нужно придумать как его формировать.
 				<br/>
 			</div>
 		);

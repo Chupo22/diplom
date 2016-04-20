@@ -1,5 +1,5 @@
 <?
-namespace LearningDatabase\ORM;
+namespace AutomatedTestingSystem\ORM;
 
 use Bitrix\Main\Entity;
 
@@ -13,12 +13,12 @@ class TestTable extends Entity\DataManager
     public static function getMap()
     {
         return [
-            new Entity\IntegerField('ID', [
+            new Entity\IntegerField('id', [
 				'primary' => true,
 				'autocomplete' => true
 			]),
-            new Entity\StringField('NAME'),
-            new Entity\StringField('CODE', [
+            new Entity\StringField('name'),
+            new Entity\StringField('code', [
 				'required' => true,
 				'unique' => true
 			]),

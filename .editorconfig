@@ -5,7 +5,7 @@ end_of_line = crlf
 insert_final_newline = true
 charset = utf-8
  
-[*.{js,es6,jsx,ts,tsx,py,html,css,less,sass,php,json}]
+[*.{js,es6,jsx,ts,tsx,py,html,css,less,sass,php,json,coffee}]
 indent_style = tab
 indent_size = 4
 trim_trailing_whitespace = false

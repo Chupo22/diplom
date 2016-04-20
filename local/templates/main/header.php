@@ -13,7 +13,7 @@
 		$APPLICATION->SetAdditionalCSS('/local/src/css/animate.css');
 		$APPLICATION->SetAdditionalCSS('/node_modules/highlight.js/styles/default.css');
 		?>
-		<script src="/local/templates/main/bundle.js"></script>
+		<script src="/local/templates/main/build/bundle.js"></script>
 		<title><?$APPLICATION->ShowTitle()?></title>
 	</head>
 	<body>

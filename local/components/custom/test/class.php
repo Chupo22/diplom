@@ -1,12 +1,13 @@
 <?if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 
-use LearningDatabase\CDatabase;
-use LearningDatabase\CDatabaseTable;
-use LearningDatabase\ORM\ExerciseTable as Exercise;
-use LearningDatabase\ORM\UserExerciseTable as UserExercise;
-use LearningDatabase\ORM\UserTaskTable as UserTask;
-use LearningDatabase\ORM\TaskTable as Task;
-use LearningDatabase\ORM\ConditionTable as Condition;
+use AutomatedTestingSystem\CDatabase;
+use AutomatedTestingSystem\CDatabaseTable;
+use AutomatedTestingSystem\ORM\ExerciseTable as Exercise;
+use AutomatedTestingSystem\ORM\TestTable;
+use AutomatedTestingSystem\ORM\UserExerciseTable as UserExercise;
+use AutomatedTestingSystem\ORM\UserTaskTable as UserTask;
+use AutomatedTestingSystem\ORM\TaskTable as Task;
+use AutomatedTestingSystem\ORM\ConditionTable as Condition;
 
 
 class Test extends CBitrixComponent {
@@ -18,11 +19,11 @@ class Test extends CBitrixComponent {
 			throw new Exception('No test code in params!');
 		if(!$arParams['EXERCISE_NUMBER']){
 			$arParams['EXERCISE_NUMBER'] = UserExercise::getList([
-				'order' => ['EXERCISE.NUMBER' => 'ASC'],
-				'filter' => ['COMPLETED' => false],
+				'order' => ['exercise.number' => 'ASC'],
+				'filter' => ['completed' => false],
 				'limit' => 1,
-				'select' => ['NUMBER' => 'EXERCISE.NUMBER']
-			])->fetch()['NUMBER'] ?: 1;
+				'select' => ['number' => 'exercise.number']
+			])->fetch()['number'] ?: 1;
 		}
 		return $arParams;
 	}
@@ -37,12 +38,13 @@ class Test extends CBitrixComponent {
 			$this->DB = CDatabase::getConnection();
 			$this->arResult['dbName'] = CDatabase::dbName;
 			$this->arResult['tables'] = $this->getTables();
+			$this->arResult['test'] = $this->getTest();
 			$this->arResult['exercises'] = $this->getExercises($this->arParams['TEST_CODE']);
 			$this->arResult['selected'] = $this->arParams['EXERCISE_NUMBER'];
 			$this->arResult['exerciseNumber'] = $this->arParams['EXERCISE_NUMBER'];
 			//$this->arResult['userExercise'] = self::getUserQuery();
 			
-			
+			//$GLOBALS['APPLICATION']->RestartBuffer();\CPL::pr($this->arResult);die;
 			
 			if($this->arParams['USER_QUERY']) {
 				$bSuccessQuery = self::checkUserQuery();
@@ -82,12 +84,29 @@ class Test extends CBitrixComponent {
 		return $arResult;
 	}
 	
+	public function getTest(){
+		$arResult = [];
+		$dbRes = TestTable::getList([
+			'filter' => ['code' => $this->arParams['TEST_CODE']],
+			'limit' => 1,
+			'select' => [
+				'name',
+				'code',
+				'id'
+			]
+		]);
+		while($arItem = $dbRes->fetch())
+			$arResult[] = $arItem;
+		
+		return $arResult;
+	}
+	
 	public function getExercises($testCode){
 		global $USER;
 		$arResult = [];
 		$arFilter = [
-			'EXERCISE.TEST.CODE' => $testCode,
-			'USER.ID' => $USER->GetID()
+			'exercise.test.code' => $testCode,
+			'user.ID' => $USER->GetID()
 		];
 		
 		
@@ -95,25 +114,29 @@ class Test extends CBitrixComponent {
 			$this->generateUserExercise($testCode);
 		
 		$dbRes = UserTask::getList([
-			'order' => ['EXERCISE.NUMBER' => 'ASC'],
+			'order' => ['exercise.number' => 'ASC'],
 			'filter' => $arFilter,
 			'select' => [
-				'number' => 'EXERCISE.NUMBER',
-				'name' => 'EXERCISE.NAME',
-				'query' => 'EXERCISE.USER_EXERCISE.QUERY',
-				'completed' => 'EXERCISE.USER_EXERCISE.COMPLETED',
+				'userExerciseId',
+				'number' => 'exercise.number',
+				'name' => 'exercise.name',
+				'query' => 'exercise.userExercise.query',
+				'completed' => 'exercise.userExercise.completed',
 				
-				'table' => 'TABLE',
-				'column' => 'COLUMN',
-				'condition' => 'CONDITION',
-				'value' => 'VALUE',
+				'table' => 'table',
+				'column' => 'column',
+				'condition' => 'condition',
+				'value' => 'value',
 			]
 		]);
 		while($arEx = $dbRes->fetch()){
+			//$GLOBALS['APPLICATION']->RestartBuffer();\CPL::pr($arEx);die;
+			$arResult[$arEx['number']]['userExerciseId'] = $arEx['userExerciseId'];
 			$arResult[$arEx['number']]['name'] = $arEx['name'];
 			$arResult[$arEx['number']]['number'] = $arEx['number'];
 			$arResult[$arEx['number']]['query'] = $arEx['query'];
-			$arResult[$arEx['number']]['completed'] = $arEx['completed'];
+			$arResult[$arEx['number']]['query'] = base64_encode($arEx['query']);
+			//$arResult[$arEx['number']]['completed'] = $arEx['completed'];
 			$arResult[$arEx['number']]['tasks'][] = [
 				'table' => $arEx['table'],
 				'column' => $arEx['column'],
@@ -128,20 +151,20 @@ class Test extends CBitrixComponent {
 			throw new Exception('No test code in exercise generation!');
 		
 		$dbRes = Task::getList([
-			'order' => ['EXERCISE.NUMBER' => 'ASC'],
+			'order' => ['exercise.number' => 'ASC'],
 			'filter' => [
-				'EXERCISE.TEST.CODE' => $testCode,
+				'exercise.test.code' => $testCode,
 			],
 			'select' => [
-				'exerciseId' => 'EXERCISE.ID',
+				'exerciseId',
 				//'name' => 'EXERCISE.NAME',
 				//'query' => 'EXERCISE.USER_EXERCISE.QUERY',
 				//'completed' => 'EXERCISE.USER_EXERCISE.COMPLETED',
 				
-				'table' => 'TABLE',
-				'column' => 'COLUMN',
-				'condition' => 'CONDITION',
-				'value' => 'VALUE',
+				'table',
+				'column',
+				'condition',
+				'value',
 			]
 		]);
 		$arExercises = [];
@@ -160,24 +183,23 @@ class Test extends CBitrixComponent {
 			];
 			
 		}
-		//$GLOBALS['APPLICATION']->RestartBuffer();\CPL::pr($arExercises);die;
 		global $USER;
 		foreach($arExercises as $exId => $arTasks){
 			
 			$arUserExerciseId = UserExercise::add([
-				'USER_ID' => $USER->GetID(),
-				'EXERCISE_ID' => $exId,
-				'QUERY' => '',
-				'COMPLETED' => false,
+				'userId' => $USER->GetID(),
+				'exerciseId' => $exId,
+				'query' => '',
+				'completed' => false,
 			])->getId();
 			
 			foreach($arTasks as $arTask){
 				UserTask::add([
-					'USER_EXERCISE_ID' => $arUserExerciseId,
-					'TABLE' => $arTask['table'],
-					'COLUMN' => $arTask['column'],
-					'CONDITION' => $arTask['condition'],
-					'VALUE' => $arTask['value'],
+					'userExerciseId' => $arUserExerciseId,
+					'table' => $arTask['table'],
+					'column' => $arTask['column'],
+					'condition' => $arTask['condition'],
+					'value' => $arTask['value'],
 				]);
 			}
 		}
@@ -187,12 +209,12 @@ class Test extends CBitrixComponent {
 		$arTasks = [];
 		$dbTasks = Task::getList([
 			'filter' => [
-				'EXERCISE.ID' => $this->arParams['EXERCISE_NUMBER'],
+				'exercise.id' => $this->arParams['EXERCISE_NUMBER'],
 			],
 			'select' => [
-				'CONDITION',
-				'VALUE',
-				'COLUMN',
+				'condition',
+				'value',
+				'column',
 			]
 		]);
 		while($arTask = $dbTasks->fetch())
@@ -202,30 +224,30 @@ class Test extends CBitrixComponent {
 		
 		$arElements = [];
 		$dbResult = CDatabase::getConnection()->Query(htmlspecialchars_decode($this->arParams['USER_QUERY']));
-		while($arElement = $dbResult->fetch())
+		while($arElement = $dbResult->Fetch())
 			$arElements[] = $arElement;
 		if(!$arElements)
 			return false;
 		
 		foreach($arTasks as $arTask)
 			foreach($arElements as $arElement)
-				if(!Condition::checkResult($arTask['CONDITION'], $arTask['VALUE'], $arElement[$arTask['COLUMN']]))
+				if(!Condition::checkResult($arTask['condition'], $arTask['value'], $arElement[$arTask['column']]))
 					return false;
 		
 		return true;
 	}
-	public function saveUserQuery($bCompleted) {
-		if($this->arResult['userExercise']['id'])
-			UserExercise::update($this->arResult['userExercise']['id'], [
-				'COMPLETED' => $bCompleted,
-				'QUERY' => $this->arParams['USER_QUERY'],
-			]);
-		else
-			UserExercise::add([
-				'COMPLETED' => $bCompleted,
-				'QUERY' => $this->arParams['USER_QUERY'],
-				'EXERCISE_ID' => $this->arParams['EXERCISE_NUMBER'],
-				'USER_ID' => (new CUser)->getId(),
-			]);
-	}
+	//public function saveUserQuery($bCompleted) {
+	//	if($this->arResult['userExercise']['id'])
+	//		UserExercise::update($this->arResult['userExercise']['id'], [
+	//			'completed' => $bCompleted,
+	//			'query' => $this->arParams['USER_QUERY'],
+	//		]);
+	//	else
+	//		UserExercise::add([
+	//			'completed' => $bCompleted,
+	//			'query' => $this->arParams['USER_QUERY'],
+	//			'exerciseId' => $this->arParams['EXERCISE_NUMBER'],
+	//			'userId' => (new CUser)->GetID(),
+	//		]);
+	//}
 }
