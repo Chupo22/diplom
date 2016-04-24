@@ -1,52 +1,18 @@
-<?
-define('ADMIN_MODULE_NAME', 'automated_testing_system');
-require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admin_before.php');
-
-use LearningDatabase\ORM\TestTable as Test;
-
+<?require_once 'prolog_before.php';
 IncludeModuleLangFile(__FILE__);
 
-if (!$USER->IsAdmin())
-	$APPLICATION->AuthForm(GetMessage('ACCESS_DENIED'));
-if (!CModule::IncludeModule(ADMIN_MODULE_NAME))
-	$APPLICATION->AuthForm(GetMessage('ACCESS_DENIED'));
+use ATSModule\CAdminItem;
+use ATSModule\Tools as ModuleTools;
+use LearningDatabase\ORM\TestTable as Test;
 
-$APPLICATION->SetTitle('Редактирование теста');
+$obAdminItem = new CAdminItem(new Test);
 
 $backUrl = ADMIN_MODULE_NAME.'_tests.php?lang='.LANGUAGE_ID;
 
-$arMessages = [
-	'errors' => [],
-	'notes' => [],
-];
-$bShowForm = true;
 
-$arTest = Test::getList([
-	'filter' => ['ID' => $_REQUEST['id']],
-	'limit' => 1,
-])->fetch();
-if(!$arTest['ID']) {
-	$arMessages['errors'][] = 'Элемент не найден';
-	$bShowForm = false;
-}
+$obAdminItem->getItem($_REQUEST['id']);
 
-$arFields = [];
-foreach(Test::getEntity()->getFields() as $obField){
-//foreach(\LearningDatabase\ORM\UserExerciseTable::getEntity()->getFields() as $obTestField){
-	if(!method_exists($obField, 'isRequired'))
-		continue; //todo-sem для referencefield нужно будет отдельное условие
-	
-	/**
-	 * 
-	 * @var Bitrix\Main\Entity\IntegerField | Bitrix\Main\Entity\StringField | Bitrix\Main\Entity\BooleanField | Bitrix\Main\Entity\TextField $obField */
-	$fieldName = $obField->getName();
-	$arFields[] = [
-		'name' => $fieldName,
-		'can_edit' => !$obField->isAutocomplete(),
-		'required' => $obField->isRequired(),
-		'value' => isset($_REQUEST['data'][$fieldName]) ? $_REQUEST['data'][$fieldName] : $arTest[$fieldName],
-	];
-}
+$arFields = $obAdminItem->getFields();
 
 
 // delete action
@@ -65,25 +31,19 @@ if (($_REQUEST['save'] || $_REQUEST['apply']) && check_bitrix_sessid()){
 		if($arField['can_edit'] && isset($_REQUEST['data'][$fieldName]))
 			$arData[$fieldName] = $_REQUEST['data'][$fieldName];
 	}
-	$result = Test::update($arTest['ID'], $arData);
+	$result = Test::update($obAdminItem->arItem['ID'], $arData);
 	if($result->isSuccess())
 		if($_REQUEST['apply'])
-			$arMessages['notes'][] = 'Тест успешно обновлён';
+			$obAdminItem->arNotes[] = ModuleTools::GetMessage('ITEM_UPDATED');
 		else
 			LocalRedirect($backUrl);
 	else
-		$arMessages['errors'] = array_merge($arMessages['errors'], $result->getErrorMessages());
+		$obAdminItem->arErrors = array_merge($obAdminItem->arErrors, $result->getErrorMessages());
 }
 
+require_once 'prolog_after.php';
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admin_after.php');
-
-if($arMessages['errors'])
-	(new CAdminMessage(''))->ShowMessage(join('\n', $arMessages['errors']));
-if($arMessages['notes'])
-	(new CAdminMessage(''))->ShowNote(join('\n', $arMessages['notes']));
-
-if($bShowForm):
+if(!$obAdminItem->arErrors):
 	(new CAdminContextMenu([
 		[
 			'TEXT'	=> 'Вернуться в список',
@@ -93,7 +53,7 @@ if($bShowForm):
 		]
 	]))->Show();
 	$tabControl = new CAdminTabControl('tabControl', [
-		['DIV' => 'edit1', 'TAB' => 'Редактирование', 'TITLE'=> 'Редактирование "'.$arTest['NAME'].'"']
+		['DIV' => 'edit1', 'TAB' => 'Редактирование', 'TITLE'=> 'Редактирование "'.$obAdminItem->arItem['NAME'].'"']
 	]);
 	?>
 	<form name='form1' method='POST' action='<?=$APPLICATION->GetCurPage()?>'>
@@ -108,7 +68,7 @@ if($bShowForm):
 			<tr>
 				<td width='40%'>
 					<?if($arField['required']):?>
-						<?=$arField['name']?>:<span style="color:red"">*</div>
+						<?=$arField['name']?>:<span style="color:red">*</span>
 					<?else:?>
 						<?=$arField['name']?>:
 					<?endif?>

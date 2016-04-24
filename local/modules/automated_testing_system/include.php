@@ -1,14 +1,6 @@
 <?
-
-// if(!CModule::IncludeModule('iblock'))
-	// return false;
-
-IncludeModuleLangFile(__FILE__);
-
-// Здесь прописываем подключаемые классы
-// CModule::AddAutoloadClasses(
-	// 'test',
-	// array(
-		// 'CPL'  => 'classes/general/CPL.php'
-	// )
-// );
+CModule::AddAutoloadClasses(ADMIN_MODULE_NAME, [
+	'ATSModule\CAdminList' => 'classes/adminList.php',
+	'ATSModule\CAdminItem' => 'classes/adminItem.php',
+	'ATSModule\Tools' => 'classes/tools.php',
+]);
