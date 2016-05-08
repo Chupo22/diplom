@@ -48,3 +48,67 @@ a.logo img {height:30px;    position: relative; margin-right: 15px;top:7px;}
 .footer p {color: #aeaeae;font-size: 16px; margin-bottom: 10px;}
 .footer p  a{ color: #c8c8c8;font-size: 14px;}
 .footer p  a:hover {    color: #f4645f;}
+
+.bs-callout {
+padding: 20px;
+margin: 20px 0;
+border: 1px solid #eee;
+border-left-width: 5px;
+border-radius: 3px;
+}
+.bs-callout-danger {
+border-left-color: #d9534f;
+}
+.bs-callout-warning {
+border-left-color: #f0ad4e;
+}
+.bs-callout-info {
+border-left-color: #5bc0de;
+}
+.bs-callout h4 {
+margin-top: 0;
+margin-bottom: 5px;
+}
+.bs-callout-danger h4 {
+color: #d9534f;
+}
+.bs-callout-warning h4 {
+color: #f0ad4e;
+}
+.bs-callout-info h4 {
+color: #5bc0de;
+}
+.bs-callout-limegreen {
+border-left-color: #32cd32;
+}
+.bs-callout-mediumpurple {
+border-left-color: #9370db;
+}
+.bs-callout-rosybrown {
+border-left-color: #bc8f8f;
+}
+.bs-callout-limegreen h4 {
+color: #32cd32;
+}
+.bs-callout-mediumpurple h4 {
+color: #9370db;
+}
+.bs-callout-rosybrown h4 {
+color: #bc8f8f;
+}
+
+
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}

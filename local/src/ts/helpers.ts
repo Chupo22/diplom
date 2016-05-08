@@ -1,4 +1,3 @@
-
 export function delay(func, delay){
 	var timeOutId;
 	return function(){

@@ -4,6 +4,8 @@ namespace AutomatedTestingSystem\ORM;
 use Bitrix\Main\Entity;
 use Bitrix\Main\UserTable;
 use AutomatedTestingSystem\CDatabase;
+use Helpers\ORM\IntegerField;
+
 
 class UserTaskTable extends Entity\DataManager
 {
@@ -16,21 +18,23 @@ class UserTaskTable extends Entity\DataManager
     public static function getMap()
     {
         return [
-            new Entity\IntegerField('id', [
+            new IntegerField('id', [
 				'primary' => true,
-				'autocomplete' => true
+				'autocomplete' => true,
 			]),
-            new Entity\IntegerField('userExerciseId', ['required' => true]),
+            new IntegerField('userExerciseId', ['required' => true]),
             new Entity\ReferenceField('user', get_class(new UserTable), ['=this.userExercise.userId' => 'ref.ID']),
             new Entity\ReferenceField('userExercise', get_class(new UserExerciseTable), ['=this.userExerciseId' => 'ref.id']),
             new Entity\ReferenceField('exercise', get_class(new ExerciseTable), ['=this.userExercise.exerciseId' => 'ref.id']),
             new Entity\ReferenceField('test', get_class(new TestTable), ['=this.userExercise.exercise.testId' => 'ref.id']),
 			
 			
+            new Entity\StringField('type'),
             new Entity\StringField('table'),
             new Entity\StringField('column'),
             new Entity\StringField('condition'),
             new Entity\StringField('value'),
+			
         ];
     }
 	

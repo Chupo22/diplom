@@ -1,12 +1,11 @@
 'use strict';
 var webpack = require('webpack');
+//noinspection CodeAssistanceForCoreModules
+var path = require('path');
 
 var config = {
     entry: {
 		bundle: "./local/templates/main/index.js",
-		// testBundle: "./local/templates/main/test.jsx",
-		// testBundle: "./local/templates/main/test.js",
-		// testBundle: "./local/templates/main/test.tsx",
 	},
     output: {
         path: __dirname + '/local/templates/main/build/',
@@ -21,32 +20,43 @@ var config = {
 	
 	resolve:{
 		moduleDirectories: ['node_modules'],
+		fallback: [path.resolve('./local/src/ts')],
 		extensions: ['', '.js','.jsx', '.ts', '.tsx'],
 		alias: {
-			jquery: 'jquery2'
+			jquery: 'jquery2',
+			
+			// helpers: path.resolve('./local/src/ts/helpers'),
+			// exercise: path.resolve('./local/src/ts/exercise'),
+			// "user-exercise": path.resolve('./local/src/ts/user-exercise'),
 		}
 	},
 	
-	// resolveLoaders:{
-	// 	moduleDirectories:['node_modules'],
-	// 	moduleTemplates: ['*-loader', '*'],
-	// 	extensions: ['js']
-	// },
+	resolveLoaders:{
+		moduleDirectories:['node_modules'],
+		moduleTemplates: ['*-loader', '*'],
+		extensions: ['', '.js']
+	},
 	
 	module: {
 		loaders: [
+			// {
+			// 	test: /\.tsx?$/,
+			// 	loader: 'webpack-typescript?target=ES5&jsx=react',
+			// },
+			
 			{
 				test: /\.tsx?$/,
-				loader: 'webpack-typescript?target=ES5&jsx=react'
+				loader: 'ts-loader'
 			},
-			{
-				test: /\.jsx?$/,
-				exclude: /(node_modules|bower_components)/,
-				loader: 'babel-loader',
-				query: {
-				  presets: ['react', 'es2015']
-				}
-			}
+			
+			// {
+			// 	test: /\.jsx?$/,
+			// 	exclude: /(node_modules|bower_components)/,
+			// 	loader: 'babel-loader',
+			// 	query: {
+			// 	  presets: ['react', 'es2015']
+			// 	}
+			// }
 		]
 	},
 	
@@ -61,7 +71,7 @@ var config = {
 		// 	}
 		// }),
 		new webpack.ProvidePlugin({
-			jquery: 'jquery2/jquery-2.0.3.js'
+			jquery: 'jquery2/jquery-2.0.3.js',
 		})
 	]
 	

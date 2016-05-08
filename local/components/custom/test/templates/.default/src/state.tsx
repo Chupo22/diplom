@@ -4,15 +4,15 @@ import * as React from 'react';
 import {IExercise} from "./test";
 // import * as ReactDOM from 'react-dom';
 // import {DropdownButton, MenuItem} from 'react-bootstrap';
-
-interface IState{
+export interface IState{
 	
 }
 
-interface IProps{
+export interface IProps{
 	onChange?: React.EventHandler<React.FormEvent>
 	exercises?: IExercise[]
 	exerciseNumber?: number
+	exercise?: IExercise
 }
 
 export class State extends React.Component<IProps, IState> {
@@ -21,8 +21,14 @@ export class State extends React.Component<IProps, IState> {
 		super();
 	}
 	
+	componentWillReceiveProps(newProps: IProps){
+		this.props = newProps;
+		this.setState({});
+	}
+	
 	render() {
-		console.trace('render - state');
+		var exerciseCompleted = this.props && this.props.exercise && this.props.exercise.completed ? 
+			<div className="alert alert-success" role="alert"><span className="glyphicon glyphicon-ok-circle"/> completed</div> : null;
 		return (
 			<div>
 				<label>
@@ -39,6 +45,7 @@ export class State extends React.Component<IProps, IState> {
 						}
 					</select>
 				</label>
+				{exerciseCompleted}
 				<br/>
 			</div>
 		);

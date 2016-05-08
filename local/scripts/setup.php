@@ -21,29 +21,24 @@ $setup->setConditions([
 	['code' => 'FULL_MATCH',	'name' => 'Полное совпадение'],
 ]);
 
+$setup->setTaskTypes([
+	['code' => 'FILTER',		'name' => 'Фильтрация'],
+	['code' => 'SELECT',		'name' => 'Получение колонок'],
+]);
+
 $setup->setExercises([
 	'select' => [
-		['TASKS' => [
-			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'MORE',		'value' => '10014']
-		]],
-		['TASKS' => [
-			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'LESS',		'value' => '10014']
-		]],
-		['TASKS' => [
-			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'EQUALLY',	'value' => '10014']
-		]],
-		['TASKS' => [
-			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'EQUALLY',	'value' => '']
-		]],
-		['TASKS' => [
-			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'EQUALLY',	'value' => ''],
-			['table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'LESS',	'value' => '']
-		]],
-		//['TASKS' => [
-		//	['TABLE' => 'salaries', 'COLUMN' => '', 'CONDITION' => '',	'VALUE' => ''],
-		//	['TABLE' => 'salaries', 'COLUMN' => '', 'CONDITION' => '',	'VALUE' => '']
-		//]],
+		[['type' => 'FILTER', 'table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'MORE',	'value' => '10014']],
+		[['type' => 'FILTER', 'table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'LESS',	'value' => '10014']],
+		[['type' => 'FILTER', 'table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'EQUALLY',	'value' => '10014']],
+		[['type' => 'FILTER', 'table' => 'dept_emp', 'column' => 'emp_no', 'condition' => 'EQUALLY',	'value' => '']],
+		[
+			['type' => 'FILTER', 'table' => 'dept_emp', 'column' => 'emp_no',	'condition' => 'LESS',	'value' => ''],
+			['type' => 'SELECT', 'table' => 'dept_emp', 'column' => 'dept_no',	'condition' => '',		'value' => ''],
+			['type' => 'SELECT', 'table' => 'dept_emp', 'column' => 'from_date','condition' => '',		'value' => ''],
+		],
 	]
 ]);
 
 $setup->setUser();
+

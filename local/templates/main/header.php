@@ -6,8 +6,10 @@
 		$APPLICATION->ShowHead();
 		$APPLICATION->ShowPanel();
 		
-		$APPLICATION->SetAdditionalCSS('/local/src/css/bootstrap.min.css');
-		$APPLICATION->SetAdditionalCSS('/local/src/css/bootstrap-theme.min.css');
+		//$APPLICATION->SetAdditionalCSS('/local/src/css/bootstrap.min.css');
+		//$APPLICATION->SetAdditionalCSS('/local/src/css/bootstrap-theme.min.css');
+		$APPLICATION->SetAdditionalCSS('/node_modules/bootstrap/dist/css/bootstrap.min.css');
+		$APPLICATION->SetAdditionalCSS('/node_modules/bootstrap/dist/css/bootstrap-theme.min.css');
 		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH.'/font.SourceSansProRegular.css');
 		$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH.'/inline.images.css');
 		$APPLICATION->SetAdditionalCSS('/local/src/css/animate.css');

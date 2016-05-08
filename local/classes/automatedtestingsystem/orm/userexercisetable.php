@@ -4,9 +4,12 @@ namespace AutomatedTestingSystem\ORM;
 use Bitrix\Main\DB\Exception;
 use Bitrix\Main\Entity;
 use \Bitrix\Main\UserTable;
+use Helpers\ORM\BooleanField;
+use Helpers\ORM\IntegerField;
 
 class UserExerciseTable extends Entity\DataManager
 {
+	
     public static function getTableName()
     {
         return 'orm_user_exercises_table';
@@ -34,11 +37,11 @@ class UserExerciseTable extends Entity\DataManager
     public static function getMap()
     {
         return [
-            new Entity\IntegerField('id', [
+            new IntegerField('id', [
 				'primary' => true,
 				'autocomplete' => true
 			]),
-            new Entity\BooleanField('completed'),
+            new BooleanField('completed'),
             new Entity\TextField('query', [
 				'save_data_modification' => function(){
 					return [
@@ -57,8 +60,8 @@ class UserExerciseTable extends Entity\DataManager
 			]),
 			
 			
-            new Entity\IntegerField('exerciseId', ['required' => true]),
-            new Entity\IntegerField('userId', ['required' => true]),
+            new IntegerField('exerciseId', ['required' => true]),
+            new IntegerField('userId', ['required' => true]),
 			
 			new Entity\ReferenceField('exercise', get_class(new ExerciseTable), ['=this.exerciseId' => 'ref.id']),
 			new Entity\ReferenceField('test', get_class(new TestTable), ['=this.exercise.testId' => 'ref.id']),

@@ -3,13 +3,15 @@ namespace AutomatedTestingSystem\ORM;
 
 use Bitrix\Main\Entity;
 use AutomatedTestingSystem\CDatabase;
+use Helpers\ORM\IntegerField;
 
 class ConditionTable extends Entity\DataManager
 {
 	const CONDITION_MORE = 'MORE';
+	const CONDITION_MORE_OR_EQUALLY = 'MORE_OR_EQUALLY';
 	const CONDITION_LESS = 'LESS';
+	const CONDITION_LESS_OR_EQUALLY = 'LESS_OR_EQUALLY';
 	const CONDITION_EQUALLY = 'EQUALLY';
-	const CONDITION_FULL_MATH = 'FULL_MATH';
 	const CONDITION_PARTIAL_MATCH = 'PARTIAL_MATCH';
 	
     public static function getTableName()
@@ -20,7 +22,7 @@ class ConditionTable extends Entity\DataManager
     public static function getMap()
     {
         return [
-            new Entity\IntegerField(
+            new IntegerField(
 				'id',
 				[
 					'primary' => true,
@@ -64,18 +66,43 @@ class ConditionTable extends Entity\DataManager
 		return $arResult;
 	}
 	
-	public static function checkResult($condition, $taskValue, $resultValue){
+	//public static function checkResult($condition, $taskValue, $resultValue){
+	//	switch($condition){
+	//		case self::CONDITION_MORE:
+	//			return $resultValue > $taskValue;
+	//			break;
+	//		case self::CONDITION_LESS:
+	//			return $resultValue < $taskValue;
+	//			break;
+	//		case self::CONDITION_EQUALLY:
+	//			return $resultValue === $taskValue;
+	//			break;
+	//	}			
+	//	return false;
+	//}
+	
+	static function getSqlCondition($condition){
+		$result = false;
 		switch($condition){
+			case self::CONDITION_EQUALLY:
+				$result = '=';
+				break;
 			case self::CONDITION_MORE:
-				return $resultValue > $taskValue;
+				$result = '>';
+				break;
+			case self::CONDITION_MORE_OR_EQUALLY:
+				$result = '>=';
 				break;
 			case self::CONDITION_LESS:
-				return $resultValue < $taskValue;
+				$result = '<';
 				break;
-			case self::CONDITION_EQUALLY:
-				return $resultValue === $taskValue;
+			case self::CONDITION_LESS_OR_EQUALLY:
+				$result = '<=';
 				break;
-		}			
-		return false;
+			case self::CONDITION_PARTIAL_MATCH:
+				$result = 'LIKE';
+				break;
+		}
+		return $result;
 	}
 }

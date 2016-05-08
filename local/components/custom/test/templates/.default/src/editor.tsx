@@ -1,10 +1,9 @@
 ///<reference path="../../../../../../src/typings/include.d.ts"/>
 import * as React from 'react';
-import {IExercise, events} from "./test";
-var AceEditor = require('react-ace');
-require('./../../../../../../../node_modules/brace/mode/mysql');
-require('./../../../../../../../node_modules/brace/theme/chrome');
-require('./../../../../../../../node_modules/brace/ext/language_tools');
+import {IExercise} from "./test";
+import {addCompleterWords, SqlEditor, ICompletion} from 'sql-editor';
+import $ = require('jquery');
+import Ace = AceAjax.Ace;
 
 export interface IState {
 	exercise?: IExercise
@@ -13,15 +12,27 @@ export interface IState {
 export interface IProps {
 	exercise: IExercise
 	onChange: (value: string) => void
+	completion: ICompletion[]
 }
 
 export class Editor extends React.Component<IProps, IState> {
 	minLines = 5;
 	state:IState = {};
+	editor: any;
 	
 	constructor(props: IProps){
 		super();
 		this.lines = props.exercise.query.split('\n').length;
+		addCompleterWords(props.completion);
+		
+		/*// $(window).keydown(function (e) {
+		// 	if (e.ctrlKey && e.keyCode == 13
+				&& this.editor
+			// ) {
+				Ctrl-Enter pressed
+				// console.log(this.editor.isFocused());
+			 // }
+		// });*/
 	}
 	
 	componentWillReceiveProps(newProps: IProps){
@@ -57,19 +68,17 @@ export class Editor extends React.Component<IProps, IState> {
 	}
 	
 	render() {
-		return (
-			<AceEditor 
-				mode="mysql"
-				theme="chrome"
-				name="test-sql-editor"
-				width="800"
-				value={this.query}
-				maxLines={this.lines}
-				minLines={this.lines}
-				onChange={this.onChange.bind(this)}
-				enableBasicAutocompletion={true}
-				enableLiveAutocompletion={true}
-			/>
-		);
+		return <SqlEditor 
+			mode="mysql"
+			theme="chrome"
+			name="test-sql-editor"
+			width="800"
+			value={this.query}
+			maxLines={this.lines}
+			minLines={this.lines}
+			onChange={this.onChange.bind(this)}
+			enableBasicAutocompletion={true}
+			enableLiveAutocompletion={true}
+		/>;
 	}
 }

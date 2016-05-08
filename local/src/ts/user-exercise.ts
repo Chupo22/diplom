@@ -1,34 +1,23 @@
-///<reference path="../typings/tsd.d.ts"/>
+///<reference path="../typings/include.d.ts"/>
 import $ = require('jquery');
+import helpers = require('helpers');
+import {IUserExercise} from "user-exercise";
 
-import {IExercise} from "./exercise";
-export interface IUserExercise extends IExercise{
-	query?: string
-	completed?: boolean
-	exerciseId?: number
-	userId?: number
-}
-
+//noinspection JSUnusedGlobalSymbols
 export class UserExercise{
-	// static add(){
-	//	
-	// }
-	// static update(){
-	//	
-	// }
-	//
-	// static remove(){
-	//	
-	// }
-	
+	static ajaxUrl =  '/ajax/user-exercise.php';
+	static ajaxActions = {
+		save: 'save',
+		execQuery: 'execQuery',
+	};
 	static save(item: IUserExercise){
-		
-		$.ajax('/ajax/user-exercise.php', {
+		//noinspection TypeScriptValidateTypes
+		$.ajax(this.ajaxUrl, {
 			dataType: 'json',
 			method: 'POST',
 			cache: false,
 			data: {
-				action: 'save',
+				action: this.ajaxActions.save,
 				item: item
 			},
 			success: function (result) {

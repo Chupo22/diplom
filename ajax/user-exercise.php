@@ -5,8 +5,10 @@ define('NO_AGENT_CHECK', true);
 define("DisableEventsCheck", true);
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_before.php');
 
+use AutomatedTestingSystem\CDatabase;
 use \AutomatedTestingSystem\ORM\ExerciseTable as Exercise;
 use \AutomatedTestingSystem\ORM\UserExerciseTable as UserExercise;
+use AutomatedTestingSystem\QueryChecker;
 
 $arAjaxResult = array('errors' => array());
 if(!$_REQUEST['action'])
@@ -29,13 +31,43 @@ switch($_REQUEST['action']){
 			'query' => $_REQUEST['item']['query'],
 		];
 		
+		
 		if($id) {
+			$test = 'update';
 			UserExercise::update($id, $arItem);
 		}
-		else
+		else{
+			$test = 'add';
 			UserExercise::add($arItem);
+		}
 		
 		
+		break;
+	case 'execQuery':
+		if(!$userExId = (int)$_REQUEST['userExerciseId'])
+			$arAjaxResult['errors'][] = 'No userExerciseId!';
+		if(!$query = $_REQUEST['query'])
+			$arAjaxResult['errors'][] = 'No query!';
+		
+		$dbRes = false;
+		if(!$arExercise['errors']){
+			$db = CDatabase::getConnection();
+			$dbRes = $db->Query($query, true);
+			if(!$dbRes){
+				$arAjaxResult['errors'][] = $query;
+				$arAjaxResult['errors'][] = $db->GetErrorMessage();
+			}else{
+				$obQueryChecker = new QueryChecker($userExId, $query);
+				if(!$obQueryChecker->isSuccess){
+					$arAjaxResult['errors'][] = 'Ошибка при проверке результата.';
+				}else{
+					UserExercise::update($userExId, ['completed' => true]);
+				}
+				$arAjaxResult['success'] = $obQueryChecker->isSuccess;
+				$arAjaxResult['items'] = array_slice($obQueryChecker->arUserResult, 0, 10);
+				$arAjaxResult['errorItems'] = array_slice($obQueryChecker->arErrorResult, 0, 10);
+			}
+		}
 		break;
 }
 

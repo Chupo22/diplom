@@ -23,17 +23,17 @@ class CDatabase extends \CDatabase{
 	
 	public static function setDbSchema(){
 		$dbName = self::dbName;
-			$dbRes = CDatabase::getConnection()->Query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='$dbName'");
-			while($arTable = $dbRes->Fetch())
-				self::$arTables[$arTable['TABLE_NAME']] = $arTable;
-			$dbRes = CDatabase::getConnection()->Query("SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='$dbName'");
-			while($arColumn = $dbRes->Fetch())
-				self::$arTables[$arColumn['TABLE_NAME']]['COLUMNS'][$arColumn['COLUMN_NAME']] = $arColumn;
+		$dbRes = CDatabase::getConnection()->Query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='$dbName'");
+		while($arTable = $dbRes->Fetch())
+			self::$arTables[$arTable['TABLE_NAME']] = $arTable;
+		$dbRes = CDatabase::getConnection()->Query("SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='$dbName'");
+		while($arColumn = $dbRes->Fetch())
+			self::$arTables[$arColumn['TABLE_NAME']]['COLUMNS'][$arColumn['COLUMN_NAME']] = $arColumn;
 	}
 	
 	public static function getDbSchema(){
 		if(!self::$arTables)
-			self:;self::setDbSchema();
+			self::setDbSchema();
 		return self::$arTables;
 	}
 	

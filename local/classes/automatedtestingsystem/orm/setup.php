@@ -13,6 +13,7 @@ class Setup{
 		$this->arTests = [];
 		$this->arExercises = [];
 		$this->arConditions = [];
+		$this->arTaskTypes = [];
 		$this->arTasks = [];
 	}
 
@@ -22,6 +23,7 @@ class Setup{
 			get_class(new Test),
 			get_class(new Exercise),
 			get_class(new Condition),
+			get_class(new TaskTypeTable),
 			get_class(new Task),
 			get_class(new UserExerciseTable),
 			get_class(new UserTaskTable),
@@ -54,17 +56,25 @@ class Setup{
 		$this->arConditions = $arResult;
 	}
 	
+	public function setTaskTypes($arItems){
+		$arResult = [];
+		foreach($arItems as $arItem){
+			$arItem['id'] = TaskTypeTable::add($arItem)->getId();
+			$arResult[] = $arItem;
+		}
+		$this->arTaskTypes = $arResult;
+	}
+	
 	public function setExercises($arTestsWithExercises){
 		$arResult = [];
 		foreach($arTestsWithExercises as $TEST_CODE => $arItems){
-			foreach($arItems as $number => $arExercise){
+			foreach($arItems as $number => $arTasks){
 				$number++;
+				$arExercise = [];
 				$arExercise['number'] = $number;
 				$arExercise['name'] = 'Exercise '.$number;
 				$arExercise['testId'] = $this->arTests[$TEST_CODE]['id'];
 				
-				$arTasks = $arExercise['TASKS'];
-				unset($arExercise['TASKS']);
 				$arExercise['id'] = Exercise::add($arExercise)->getId();
 				
 				foreach($arTasks as $arTask){

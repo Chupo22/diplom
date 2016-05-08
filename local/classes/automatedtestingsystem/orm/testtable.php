@@ -2,6 +2,7 @@
 namespace AutomatedTestingSystem\ORM;
 
 use Bitrix\Main\Entity;
+use Helpers\ORM\IntegerField;
 
 class TestTable extends Entity\DataManager
 {
@@ -13,7 +14,7 @@ class TestTable extends Entity\DataManager
     public static function getMap()
     {
         return [
-            new Entity\IntegerField('id', [
+            new IntegerField('id', [
 				'primary' => true,
 				'autocomplete' => true
 			]),
