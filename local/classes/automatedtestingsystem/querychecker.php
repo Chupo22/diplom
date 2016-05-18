@@ -11,9 +11,10 @@ use AutomatedTestingSystem\ORM\UserTaskTable;
 class QueryChecker{
 
 	private $arUserTasks;
-	
 	public $isSuccess;
-	public $verificationQuery;
+
+	public $arErrors = [];
+	public $verificationQueries;
 	public $arErrorResult;
 	public $arUserResult;
 	
@@ -58,32 +59,71 @@ class QueryChecker{
 			$column = $arTask['column'];
 			$condition = ConditionTable::getSqlCondition($arTask['condition']);
 			$value = $arTask['value'];
-			$arWhere[] = "(`$column` $condition '$value')";
+			
+			switch($arTask['condition']){
+				case ConditionTable::CONDITION_LIKE:
+					$arWhere[] = "(`$column` like '%{$arTask['value']}%')";
+					break;
+				case ConditionTable::CONDITION_IN:
+					$arWhere[] = "(`$column` in ({$arTask['value']}))";
+					break;
+				case ConditionTable::CONDITION_BETWEEN:
+					$arValues = explode(',', $arTask['value']);
+					$arWhere[] = "(`$column` between '{$arValues[0]}' and '{$arValues[1]}')";
+					break;
+				default:
+					$arWhere[] = "(`$column` $condition '$value')";
+					break;
+			}
+			
 		}
-		
+
 		$tableName = reset($this->arUserTasks[TaskTypeTable::TYPE_FILTER])['table'];
+		$columnName = $this->getUniqueColumn($tableName);
 		$userQuery = str_replace(PHP_EOL, '', $this->userQuery);
-		$userQuery = preg_replace('/^select(.*?)from/i', 'select `'.$this->getUniqueColumn($tableName).'` from', $userQuery, 1);
-		$arWhere[] = $this->getUniqueColumn($tableName)." NOT IN($userQuery)";
-		$query = 'select '.implode(',', $arSelect).' from `'.$tableName.'` where '.implode(' AND ', $arWhere);
+		$userQuery = preg_replace('/^select (.*?) from/i', "select `$columnName` from", $userQuery, 1);
+
+		$verificationQuery = "select `$columnName` from `$tableName` where ".implode(' AND ', $arWhere);
+		$query1 = 'select '.implode(',', $arSelect)." from `$tableName` where `$columnName` IN($verificationQuery) AND `$columnName` NOT IN($userQuery)";
+		$query2 = 'select '.implode(',', $arSelect)." from `$tableName` where `$columnName` IN($userQuery) AND `$columnName` NOT IN($verificationQuery)";
 		
-		$this->verificationQuery = $query;
+		$this->verificationQueries = [$query1, $query2];
 	}
 	
 	private function setResult(){
 		$db = CDatabase::getConnection();
-		$checkDbResult = $db->Query($this->verificationQuery);
 		$this->arErrorResult = [];
-		while($arItem = $checkDbResult->Fetch()){
-			$this->arErrorResult[] = $arItem;
+		foreach($this->verificationQueries as $query){
+			$checkDbResult = $db->Query($query, true);
+			if(!$checkDbResult){
+				if($errorMess = $db->GetErrorMessage())
+					$this->arErrors[] = "Verification sql error: ".$errorMess;
+			}
+			else
+				while($arItem = $checkDbResult->Fetch())
+					$this->arErrorResult[] = $arItem;
 		}
-		$this->isSuccess = !$this->arErrorResult; 
 		
-		$dbUserRes = $db->Query($this->userQuery);
-		$this->arUserResult = [];
-		while($arItem = $dbUserRes->Fetch()){
-			$this->arUserResult[] = $arItem;
+		
+		$dbUserRes = $db->Query($this->userQuery, true);
+		if(!$dbUserRes)
+			$this->arErrors[] = 'sql error!';
+		if($this->arErrorResult)
+			$this->arErrors[] = 'Filter task error!';
+		if($dbUserRes){
+			$this->arUserResult = [];
+			while($arItem = $dbUserRes->Fetch()){
+				$this->arUserResult[] = $arItem;
+			}
 		}
+
+		$arFirstItem = $this->arUserResult[0];
+		if($arFirstItem && !$this->checkSelect($this->arUserResult[0]))
+		{
+			$this->arErrors[] = 'Select task error!';
+		}
+
+		$this->isSuccess = !$this->arErrorResult && !$this->arErrors;
 	}
 	
 	private function getUniqueColumn($tableName){
@@ -91,11 +131,24 @@ class QueryChecker{
 			'departments' => 'dept_no',
 			'dept_emp' => 'emp_no',
 			'dept_manager' => 'emp_no',
-			'employees' => '',
+			'employees' => 'emp_no',
 			'salaries' => 'id',
-			'titles' => '',
+			'titles' => 'id',
 		];
 		return $arConvert[$tableName];
 
-	}	
+	}
+
+	private function checkSelect($arItem){
+		$result = true;
+		$arTaskColumns = [];
+		$arUserColumns = array_keys($arItem);
+		foreach ($this->arUserTasks[TaskTypeTable::TYPE_SELECT] as $arUserTask) {
+			$arTaskColumns[] = $arUserTask['column'];
+		}
+		if($arTaskColumns){
+			$result = !array_diff($arTaskColumns, $arUserColumns);
+		}
+		return $result;
+	}
 }

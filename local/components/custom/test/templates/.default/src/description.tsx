@@ -23,6 +23,8 @@ export class Description extends React.Component<IProps, IState> {
 	}
 	
 	render() {
+		var exerciseCompleted = this.props && this.props.exercise && this.props.exercise.completed ? 
+			<div style={{width:125}} className="alert alert-success" role="alert"><span className="glyphicon glyphicon-ok-circle"/> completed</div> : null;
 		return (
 			<div>
 
@@ -48,6 +50,7 @@ export class Description extends React.Component<IProps, IState> {
 				
 				<h2>Задача:</h2>
 				<div className="bs-callout bs-callout-info">
+					{exerciseCompleted}
 					<div className="row">{
 						this.props.exercise.tasks.map((task) => 
 							<p key={task.id}> 

@@ -7,3 +7,5 @@ exports.initTest = function(params){
 exports.initAuthForm = function(params){
 	require('./components/bitrix/system.auth.form/.default/src/AuthForm.tsx').bootstrap(params);
 };
+
+exports.helpers = require('helpers');

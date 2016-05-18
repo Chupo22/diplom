@@ -5,6 +5,7 @@ use AutomatedTestingSystem\CDatabaseTable;
 use AutomatedTestingSystem\ORM\ExerciseTable as Exercise;
 use AutomatedTestingSystem\ORM\TestTable;
 use AutomatedTestingSystem\ORM\UserExerciseTable as UserExercise;
+use AutomatedTestingSystem\ORM\UserExerciseTable;
 use AutomatedTestingSystem\ORM\UserTaskTable as UserTask;
 use AutomatedTestingSystem\ORM\TaskTable as Task;
 use AutomatedTestingSystem\ORM\ConditionTable as Condition;
@@ -34,33 +35,17 @@ class Test extends CBitrixComponent {
 		global $USER, $APPLICATION;
 		if(!$USER->IsAuthorized())
 			$APPLICATION->AuthForm('');
-		
-		//if(!Helpers\Tools::isAjax()){
-			$this->DB = CDatabase::getConnection();
-			$this->arResult['dbName'] = CDatabase::dbName;
-			$this->arResult['tables'] = $this->getTables();
-			$this->arResult['completion'] = $this->getCompletion($this->arResult['tables']);
-			$this->arResult['test'] = $this->getTest();
-			$this->arResult['exercises'] = $this->getExercises($this->arParams['TEST_CODE']);
-			$this->arResult['selected'] = $this->arParams['EXERCISE_NUMBER'];
-			$this->arResult['exerciseNumber'] = $this->arParams['EXERCISE_NUMBER'];
-			//$this->arResult['userExercise'] = self::getUserQuery();
-			
-			//$GLOBALS['APPLICATION']->RestartBuffer();\CPL::pr($this->arResult);die;
-			
-			//if($this->arParams['USER_QUERY']) {
-			//	$bSuccessQuery = self::checkUserQuery();
-			//	self::saveUserQuery($bSuccessQuery);
-			//}
-				
-		
-		
-			$this->includeComponentTemplate();
-		//}else{
-		//	die(json_encode($this->getCurrentExercise()));
-		//}
-		
+	
+		$this->arResult['dbName'] = CDatabase::dbName;
+		$this->arResult['tables'] = $this->getTables();
+		$this->arResult['completion'] = $this->getCompletion($this->arResult['tables']);
+		$this->arResult['test'] = $this->getTest();
+		$this->arResult['exercises'] = $this->getExercises($this->arParams['TEST_CODE']);
+		$this->arResult['selected'] = $this->getCurrentExerciseNumber();
+		$this->arResult['exerciseNumber'] = $this->arParams['EXERCISE_NUMBER'];
 
+	
+		$this->includeComponentTemplate();
 	}
 	
 	public function getCompletion($arTables){
@@ -142,6 +127,7 @@ class Test extends CBitrixComponent {
 				'number' => 'exercise.number',
 				'name' => 'exercise.name',
 				'query' => 'userExercise.query',
+				'successQuery' => 'userExercise.successQuery',
 				'completed' => 'userExercise.completed',
 				
 				'type',
@@ -155,7 +141,8 @@ class Test extends CBitrixComponent {
 			$arResult[$arEx['number']]['userExerciseId'] = $arEx['userExerciseId'];
 			$arResult[$arEx['number']]['name'] = $arEx['name'];
 			$arResult[$arEx['number']]['number'] = $arEx['number'];
-			$arResult[$arEx['number']]['query'] = base64_encode($arEx['query']);
+			//$arResult[$arEx['number']]['query'] = base64_encode($arEx['query']);
+			$arResult[$arEx['number']]['query'] = $arEx['successQuery'] ?: $arEx['query'];
 			$arResult[$arEx['number']]['completed'] = $arEx['completed'];
 			$arResult[$arEx['number']]['tasks'][] = [
 				'id' => $arEx['taskId'],
@@ -169,11 +156,15 @@ class Test extends CBitrixComponent {
 		return array_values($arResult);
 	}
 	
-	//public function getExercise($exId){
-	//	return array_filter($this->arResult['exercises'], function($arExercise) use($exId){
-	//		return $arExercise['id'] == $exId;
-	//	})[0];
-	//}
+	private function getCurrentExerciseNumber() { 
+		return $this->arParams['EXERCISE_NUMBER'] ?:
+			UserExerciseTable::getList([
+				'select' => ['number'],
+				'order' => ['number' => 'asc'],
+				'filter' => ['completed' => false],
+				'limit' => 1
+			])->fetch() ?: 1;
+	}
 	
 	public function generateUserExercise($testCode){
 		if(!$testCode)
@@ -198,7 +189,6 @@ class Test extends CBitrixComponent {
 			]
 		]);
 		$arExercises = [];
-		$arTasks = [];
 		while($arItem = $dbRes->fetch()){
 			$type = $arItem['type'];
 			$table = UserTask::getTable($arItem['table']);
@@ -206,7 +196,8 @@ class Test extends CBitrixComponent {
 			$condition = UserTask::getCondition($table, $column, $arItem['condition']);
 			$value = UserTask::getValue($table, $column, $condition, $arItem['value']);
 			
-			$arExercises[$arItem['exerciseId']][]= [
+			$exId = $arItem['exerciseId'];
+			$arExercises[$exId][]= [
 				'type' => $type,
 				'table' => $table,
 				'column' => $column,
@@ -237,50 +228,4 @@ class Test extends CBitrixComponent {
 			}
 		}
 	}
-	
-	public function checkUserQuery($exerciseId){
-		$arTasks = [];
-		$dbTasks = Task::getList([
-			'filter' => [
-				'exercise.id' => $this->arParams['EXERCISE_NUMBER'],
-			],
-			'select' => [
-				'condition',
-				'value',
-				'column',
-			]
-		]);
-		while($arTask = $dbTasks->fetch())
-			$arTasks[] = $arTask;
-		if(!$arTasks)
-			return false;
-		
-		$arElements = [];
-		$dbResult = CDatabase::getConnection()->Query(htmlspecialchars_decode($this->arParams['USER_QUERY']));
-		while($arElement = $dbResult->Fetch())
-			$arElements[] = $arElement;
-		if(!$arElements)
-			return false;
-		
-		foreach($arTasks as $arTask)
-			foreach($arElements as $arElement)
-				if(!Condition::checkResult($arTask['condition'], $arTask['value'], $arElement[$arTask['column']]))
-					return false;
-		
-		return true;
-	}
-	//public function saveUserQuery($bCompleted) {
-	//	if($this->arResult['userExercise']['id'])
-	//		UserExercise::update($this->arResult['userExercise']['id'], [
-	//			'completed' => $bCompleted,
-	//			'query' => $this->arParams['USER_QUERY'],
-	//		]);
-	//	else
-	//		UserExercise::add([
-	//			'completed' => $bCompleted,
-	//			'query' => $this->arParams['USER_QUERY'],
-	//			'exerciseId' => $this->arParams['EXERCISE_NUMBER'],
-	//			'userId' => (new CUser)->GetID(),
-	//		]);
-	//}
 }

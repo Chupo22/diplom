@@ -12,7 +12,9 @@ class ConditionTable extends Entity\DataManager
 	const CONDITION_LESS = 'LESS';
 	const CONDITION_LESS_OR_EQUALLY = 'LESS_OR_EQUALLY';
 	const CONDITION_EQUALLY = 'EQUALLY';
-	const CONDITION_PARTIAL_MATCH = 'PARTIAL_MATCH';
+	const CONDITION_LIKE = 'LIKE';
+	const CONDITION_IN = 'IN';
+	const CONDITION_BETWEEN = 'BETWEEN';
 	
     public static function getTableName()
     {
@@ -37,49 +39,26 @@ class ConditionTable extends Entity\DataManager
 	public static function getConditions($table, $column){
 		$columnType = CDatabase::getColumn($table, $column)['DATA_TYPE'];
 		
-		$arResult = [];
+		$arResult = [
+			self::CONDITION_EQUALLY,
+			self::CONDITION_IN
+		];
+		
+		//$arResult = [];
 		switch($columnType){
+			case 'int':
+				$arResult[] = self::CONDITION_BETWEEN;
+				$arResult[] = self::CONDITION_MORE;
+				$arResult[] = self::CONDITION_MORE_OR_EQUALLY;
+				$arResult[] = self::CONDITION_LESS_OR_EQUALLY;
+				break;
 			case 'varchar':
 			case 'char':
-				//$arResult = [
-				//	self::CONDITION_MORE,
-				//	self::CONDITION_LESS,
-				//	self::CONDITION_EQUALLY,
-				//];
-				//break;
-			case 'int':
-				//$arResult = [
-				//	self::CONDITION_MORE,
-				//	self::CONDITION_LESS,
-				//	self::CONDITION_EQUALLY,
-				//];
-			//break;
-			default:
-				
-				//todo: пока както так. Нужно переделать.
-				$arResult = [
-					self::CONDITION_MORE,
-					self::CONDITION_LESS,
-					self::CONDITION_EQUALLY,
-				];
+				$arResult[] = self::CONDITION_LIKE;
+				break;
 		}
 		return $arResult;
 	}
-	
-	//public static function checkResult($condition, $taskValue, $resultValue){
-	//	switch($condition){
-	//		case self::CONDITION_MORE:
-	//			return $resultValue > $taskValue;
-	//			break;
-	//		case self::CONDITION_LESS:
-	//			return $resultValue < $taskValue;
-	//			break;
-	//		case self::CONDITION_EQUALLY:
-	//			return $resultValue === $taskValue;
-	//			break;
-	//	}			
-	//	return false;
-	//}
 	
 	static function getSqlCondition($condition){
 		$result = false;
@@ -99,7 +78,7 @@ class ConditionTable extends Entity\DataManager
 			case self::CONDITION_LESS_OR_EQUALLY:
 				$result = '<=';
 				break;
-			case self::CONDITION_PARTIAL_MATCH:
+			case self::CONDITION_LIKE:
 				$result = 'LIKE';
 				break;
 		}

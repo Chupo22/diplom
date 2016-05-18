@@ -68,7 +68,7 @@ export class Test extends React.Component<IProps, IState> {
 	
 	constructor(props: IProps){
 		super();
-		props.exercises.forEach((item: IExercise, index)=>item.query = helpers.base64_decode(item.query));
+		// props.exercises.forEach((item: IExercise, index)=>{item.query = helpers.base64_decode(item.query))};
 		this.saveQuery = helpers.delay(this.saveQuery, 200);
 		this.state.selected = _.find(props.exercises, {number: props.exerciseNumber});
 	}
@@ -104,6 +104,8 @@ export class Test extends React.Component<IProps, IState> {
 	}
 	
 	onChangeExercise(e: any){
+		this.result = undefined;
+		this.errors = undefined;
 		this.selected = _.find(this.exercises, {number: parseInt(e.target.value)});
 	}
 	
@@ -137,6 +139,7 @@ export class Test extends React.Component<IProps, IState> {
 				$(window).trigger(events.onAfterExecQuery, [result]);
 				if(result.success)
 					this.selected.completed = true;
+				console.log(result);
 				this.setState({
 					result: result,
 					errors: result.errors,

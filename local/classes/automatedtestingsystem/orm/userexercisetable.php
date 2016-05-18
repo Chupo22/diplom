@@ -58,6 +58,23 @@ class UserExerciseTable extends Entity\DataManager
 					];
 				}
 			]),
+			 new Entity\TextField('successQuery', [
+				'save_data_modification' => function(){
+					return [
+						function($value){
+							return base64_encode($value);
+						}
+					];
+				},
+				'fetch_data_modification' => function(){
+					return[
+						function($value){
+							return base64_decode($value);
+						}
+					];
+				}
+			]),
+			
 			
 			
             new IntegerField('exerciseId', ['required' => true]),

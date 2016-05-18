@@ -74,19 +74,45 @@ class UserTaskTable extends Entity\DataManager
 				case ConditionTable::CONDITION_LESS;
 				case ConditionTable::CONDITION_MORE;
 				case ConditionTable::CONDITION_EQUALLY;
+				case ConditionTable::CONDITION_MORE_OR_EQUALLY:
+				case ConditionTable::CONDITION_LESS_OR_EQUALLY:
 					$query = "
 						SELECT $columnName FROM $tableName GROUP BY $columnName
 						ORDER BY RAND()
 						LIMIT 1
 					";
 					$dbRes = CDatabase::getConnection()->Query($query);
-
-					$arItems = [];
-					//while($arItem = $dbRes->Fetch()){
-					//	$arItems[] = $arItem[$columnName];
-					//}
-					//$result = $arItems[array_rand($arItems)];
 					$result = $dbRes->Fetch()[$columnName];
+					break;
+				case ConditionTable::CONDITION_BETWEEN:
+					//todo: реализоваться between
+					break;
+				case ConditionTable::CONDITION_IN:
+					$limit = rand(2,10);
+					$query = "
+						SELECT $columnName FROM $tableName GROUP BY $columnName
+						ORDER BY RAND()
+						LIMIT $limit
+					";
+					$dbRes = CDatabase::getConnection()->Query($query);
+					$arResult = [];
+					while($arItem = $dbRes->Fetch()){
+						$arResult[] = $arItem[$columnName];
+					}
+					$result = implode(',',$arResult);
+					break;
+				case ConditionTable::CONDITION_LIKE:
+					$query = "
+						SELECT $columnName FROM $tableName GROUP BY $columnName
+						ORDER BY RAND()
+						LIMIT 1
+					";
+					$dbRes = CDatabase::getConnection()->Query($query);
+					$randValue = $dbRes->Fetch()[$columnName];
+					$length = strlen($randValue);
+					$start = rand(1, ($length / 2) - 1);
+					$end = rand(($length / 2) + 1, $length - 1);
+					$result = substr($randValue,$start, $start - $end);
 					break;
 			}
 		}

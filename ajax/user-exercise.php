@@ -59,12 +59,16 @@ switch($_REQUEST['action']){
 			}else{
 				$obQueryChecker = new QueryChecker($userExId, $query);
 				if(!$obQueryChecker->isSuccess){
-					$arAjaxResult['errors'][] = 'Ошибка при проверке результата.';
+					if($obQueryChecker->arErrors)
+						$arAjaxResult['errors'] =  array_merge($arAjaxResult['errors'], $obQueryChecker->arErrors);
+					else
+						$arAjaxResult['errors'][] = 'Ошибка при проверке результата!';
 				}else{
-					UserExercise::update($userExId, ['completed' => true]);
+					UserExercise::update($userExId, ['completed' => true, 'successQuery' => $query]);
 				}
 				$arAjaxResult['success'] = $obQueryChecker->isSuccess;
-				$arAjaxResult['items'] = array_slice($obQueryChecker->arUserResult, 0, 10);
+				if($arAjaxResult['success'])
+					$arAjaxResult['items'] = array_slice($obQueryChecker->arUserResult, 0, 10);
 				$arAjaxResult['errorItems'] = array_slice($obQueryChecker->arErrorResult, 0, 10);
 			}
 		}

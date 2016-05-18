@@ -67,23 +67,20 @@ class Setup{
 	
 	public function setExercises($arTestsWithExercises){
 		$arResult = [];
-		foreach($arTestsWithExercises as $TEST_CODE => $arItems){
-			foreach($arItems as $number => $arTasks){
-				$number++;
+		foreach($arTestsWithExercises as $TEST_CODE => $arExercises){
+			foreach ($arExercises as $number =>$arExSetupData) {
 				$arExercise = [];
-				$arExercise['number'] = $number;
-				$arExercise['name'] = 'Exercise '.$number;
+				$arExercise['name'] = $arExSetupData['name'];
+				$arExercise['number'] = $number + 1;
 				$arExercise['testId'] = $this->arTests[$TEST_CODE]['id'];
-				
 				$arExercise['id'] = Exercise::add($arExercise)->getId();
-				
-				foreach($arTasks as $arTask){
+				$arResult[] = $arExercise;
+
+				foreach($arExSetupData['tasks'] as $arTask)
+				{
 					$arTask['exerciseId'] = $arExercise['id'];
 					Task::add($arTask);
 				}
-				
-				
-				$arResult[] = $arExercise;
 			}
 		}
 	}

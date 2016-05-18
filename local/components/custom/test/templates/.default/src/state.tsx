@@ -27,8 +27,6 @@ export class State extends React.Component<IProps, IState> {
 	}
 	
 	render() {
-		var exerciseCompleted = this.props && this.props.exercise && this.props.exercise.completed ? 
-			<div className="alert alert-success" role="alert"><span className="glyphicon glyphicon-ok-circle"/> completed</div> : null;
 		return (
 			<div>
 				<label>
@@ -40,13 +38,12 @@ export class State extends React.Component<IProps, IState> {
 					>
 						{
 							this.props.exercises.map((item)=>{
-								return <option key={item.number} value={item.number.toString()}>{item.name}</option>;
+								var completed = item.completed ? '✔' : null;
+								return <option key={item.number} value={item.number.toString()}>{item.name} {completed}</option>;
 							})
 						}
 					</select>
 				</label>
-				{exerciseCompleted}
-				<br/>
 			</div>
 		);
 	}
