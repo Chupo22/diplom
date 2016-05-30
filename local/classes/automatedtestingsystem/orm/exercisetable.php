@@ -25,6 +25,7 @@ class ExerciseTable extends Entity\DataManager
 			]),
             new IntegerField('number',['required' => true,'unique' => true]),
             new Entity\StringField('name'),
+            new Entity\StringField('template'),
             new IntegerField('testId', ['required' => true]),
             new Entity\ReferenceField('test', get_class(new Test), ['=this.testId' => 'ref.id']),
             new Entity\ReferenceField('task', get_class(new Task), ['=this.taskId' => 'ref.id'], ['multiple' => true]),

@@ -12,15 +12,15 @@
 	]
 ];
 
-use LearningDatabase\ORM\TestTable;
+use AutomatedTestingSystem\ORM\TestTable;
 
 $dbRes = TestTable::getList([
-	'select' => ['NAME', 'CODE']
+	'select' => ['name', 'code']
 ]);
 while($arItem = $dbRes->fetch()){
 	$aMenuLinks[] = [
-		$arItem['NAME'],
-		str_replace('#TEST_CODE#', $arItem['CODE'], TEST_URL),
+		$arItem['name'],
+		str_replace('#TEST_CODE#', $arItem['code'], TEST_URL),
 		[],
 		[
 			'FROM_IBLOCK' => true,

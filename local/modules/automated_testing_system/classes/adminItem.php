@@ -1,8 +1,8 @@
 <?namespace ATSModule;
 
 use ATSModule\Tools as ModuleTools;
-use LearningDatabase\ORM\TestTable as Test;
-use LearningDatabase\ORM\ExerciseTable as Exercise;
+use AutomatedTestingSystem\ORM\TestTable as Test;
+use AutomatedTestingSystem\ORM\ExerciseTable as Exercise;
 use Bitrix\Main\Entity;
 
 class CAdminItem{
@@ -16,11 +16,12 @@ class CAdminItem{
 		$this->arErrors = [];
 		$this->arNotes = [];
 	}
-	public function getItem($id){
+	public function getItem($id, $arSelect = ['*']){
 		$class = $this->class;
 		$this->arItem = $class::getList([
-			'filter' => ['ID' => $id],
+			'filter' => ['id' => $id],
 			'limit' => 1,
+			'select' => $arSelect
 		])->fetch();
 		if(!$this->arItem)
 			$this->arErrors[] = ModuleTools::GetMessage('ITEM_NOT_FOUND') ?: 'Item not Found.';

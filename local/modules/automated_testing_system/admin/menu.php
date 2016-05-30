@@ -2,8 +2,8 @@
 IncludeModuleLangFile(__FILE__);
 $module_id = 'automated_testing_system';
 
-use LearningDatabase\ORM\TestTable as Test;
-use LearningDatabase\ORM\ExerciseTable as Exercise;
+use AutomatedTestingSystem\ORM\TestTable as Test;
+use AutomatedTestingSystem\ORM\ExerciseTable as Exercise;
 
 if($APPLICATION->GetGroupRight($module_id)>'D') { //проверка уровня доступа к модулю
 	$MODULE_PATH = $_SERVER['DOCUMENT_ROOT'].getLocalPath('modules/'.$module_id);
@@ -22,27 +22,26 @@ if($APPLICATION->GetGroupRight($module_id)>'D') { //проверка уровн�
 	];
 	
 	$arExercisesMenuItems = [];
-	$dbExercises = Exercise::getList(['select' => ['ID', 'TEST_ID', 'NAME']]);
+	$dbExercises = Exercise::getList(['select' => ['id', 'testId', 'name']]);
 	while($arExercise = $dbExercises->fetch()) {
-		
-		$arExercisesMenuItems[$arExercise['TEST_ID']][] = [
-			'url'		=> $module_id.'_exercise.php?'.http_build_query(['lang' => LANGUAGE_ID, 'id' => $arExercise['ID']]),
-			'text'		=> $arExercise['NAME'],
-			'title'		=> $arExercise['NAME'],
+		$arExercisesMenuItems[$arExercise['testId']][] = [
+			'url'		=> $module_id.'_exercise.php?'.http_build_query(['lang' => LANGUAGE_ID, 'id' => $arExercise['id']]),
+			'text'		=> $arExercise['name'],
+			'title'		=> $arExercise['name'],
 		];
 	}
 	
-	$dbTests = Test::getList(['select' => ['ID', 'NAME']]);
+	$dbTests = Test::getList(['select' => ['id', 'name']]);
 	while($arTest = $dbTests->fetch()) {
 		$aMenu['items'][] = [
-			'url'		=> $module_id.'_exercises.php?'.http_build_query(['lang' => LANGUAGE_ID, 'id' => $arTest['ID']]),
-			'text'		=> $arTest['NAME'],
-			'title'		=> $arTest['NAME'],
+			'url'		=> $module_id.'_exercises.php?'.http_build_query(['lang' => LANGUAGE_ID, 'id' => $arTest['id']]),
+			'text'		=> $arTest['name'],
+			'title'		=> $arTest['name'],
 			'more_url'	=> [
-				$module_id.'_test.php?'.http_build_query(['lang' => LANGUAGE_ID, 'id' => $arTest['ID']]),
-				$module_id.'_exercises.php?'.http_build_query(['lang' => LANGUAGE_ID, 'id' => $arTest['ID']]),
+				$module_id.'_test.php?'.http_build_query(['lang' => LANGUAGE_ID, 'id' => $arTest['id']]),
+				$module_id.'_exercises.php?'.http_build_query(['lang' => LANGUAGE_ID, 'id' => $arTest['id']]),
 			],
-			'items' => $arExercisesMenuItems[$arTest['ID']],
+			'items' => $arExercisesMenuItems[$arTest['id']],
 		];
 	}
 	

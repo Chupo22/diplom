@@ -1,12 +1,12 @@
 <?namespace ATSModule;
 
-use LearningDatabase\ORM\TestTable as Test;
-use LearningDatabase\ORM\ExerciseTable as Exercise;
+use AutomatedTestingSystem\ORM\TestTable as Test;
+use AutomatedTestingSystem\ORM\ExerciseTable as Exercise;
 
 class CAdminList extends \CAdminList{
 	/** @var Test | Exercise $class */
 	var $class;
-	function __construct($class, $arSort = ['ID' => 'asc']) {
+	function __construct($class, $arSort = ['id' => 'asc']) {
 		$this->class = $class;
 		$sortBy = reset(array_keys($arSort));
 		$sortOrder = reset(array_values($arSort));

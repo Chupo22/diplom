@@ -79,6 +79,7 @@ class UserExerciseTable extends Entity\DataManager
 			
             new IntegerField('exerciseId', ['required' => true]),
             new IntegerField('userId', ['required' => true]),
+			new Entity\StringField('template'),
 			
 			new Entity\ReferenceField('exercise', get_class(new ExerciseTable), ['=this.exerciseId' => 'ref.id']),
 			new Entity\ReferenceField('test', get_class(new TestTable), ['=this.exercise.testId' => 'ref.id']),

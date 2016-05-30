@@ -3,7 +3,7 @@ IncludeModuleLangFile(__FILE__);
 
 use ATSModule\CAdminList;
 use ATSModule\Tools as ModuleTools;
-use LearningDatabase\ORM\ExerciseTable as Exercise;
+use AutomatedTestingSystem\ORM\ExerciseTable as Exercise;
 
 $elementPage = ADMIN_MODULE_NAME.'_exercise.php';
 
@@ -11,16 +11,16 @@ $obAdminList = new CAdminList(new Exercise);
 
 $obAdminList->AddHeaders();
 
-$dbElements = Exercise::getList(['filter' => ['TEST_ID' => $_REQUEST['id']]]);
+$dbElements = Exercise::getList(['filter' => ['testId' => $_REQUEST['id']]]);
 while($arElement = $dbElements->fetch()) {
-	$row = $obAdminList->AddRow($arElement['ID'], $arElement);
+	$row = $obAdminList->AddRow($arElement['id'], $arElement);
 	
 	$row->AddActions([
 		[
 			'ICON' => 'edit',
 			'TEXT' => GetMessage('MAIN_ADMIN_MENU_EDIT'),
 			'ACTION' => $obAdminList->ActionRedirect($elementPage.'?'.http_build_query([
-				'id' => $arElement['ID'],
+				'id' => $arElement['id'],
 				'action' => 'edit',
 			])),
 			'DEFAULT' => true,
@@ -29,7 +29,7 @@ while($arElement = $dbElements->fetch()) {
 			'ICON' => 'delete',
 			'TEXT' => GetMessage('MAIN_ADMIN_MENU_DELETE'),
 			'ACTION' => $obAdminList->ActionRedirect($elementPage.'?'.http_build_query([
-				'id' => $arElement['ID'],
+				'id' => $arElement['id'],
 				'sessid' => bitrix_sessid(),
 				'action' => 'delete',
 			]))

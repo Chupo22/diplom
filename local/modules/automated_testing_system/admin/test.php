@@ -3,7 +3,7 @@ IncludeModuleLangFile(__FILE__);
 
 use ATSModule\CAdminItem;
 use ATSModule\Tools as ModuleTools;
-use LearningDatabase\ORM\TestTable as Test;
+use AutomatedTestingSystem\ORM\TestTable as Test;
 
 $obAdminItem = new CAdminItem(new Test);
 
@@ -31,7 +31,7 @@ if (($_REQUEST['save'] || $_REQUEST['apply']) && check_bitrix_sessid()){
 		if($arField['can_edit'] && isset($_REQUEST['data'][$fieldName]))
 			$arData[$fieldName] = $_REQUEST['data'][$fieldName];
 	}
-	$result = Test::update($obAdminItem->arItem['ID'], $arData);
+	$result = Test::update($obAdminItem->arItem['id'], $arData);
 	if($result->isSuccess())
 		if($_REQUEST['apply'])
 			$obAdminItem->arNotes[] = ModuleTools::GetMessage('ITEM_UPDATED');
@@ -53,7 +53,7 @@ if(!$obAdminItem->arErrors):
 		]
 	]))->Show();
 	$tabControl = new CAdminTabControl('tabControl', [
-		['DIV' => 'edit1', 'TAB' => 'Редактирование', 'TITLE'=> 'Редактирование "'.$obAdminItem->arItem['NAME'].'"']
+		['DIV' => 'edit1', 'TAB' => 'Редактирование', 'TITLE'=> 'Редактирование "'.$obAdminItem->arItem['name'].'"']
 	]);
 	?>
 	<form name='form1' method='POST' action='<?=$APPLICATION->GetCurPage()?>'>

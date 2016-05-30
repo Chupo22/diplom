@@ -3,7 +3,7 @@ IncludeModuleLangFile(__FILE__);
 
 use ATSModule\CAdminList;
 use ATSModule\Tools as ModuleTools;
-use LearningDatabase\ORM\TestTable as Test;
+use AutomatedTestingSystem\ORM\TestTable as Test;
 
 $elementPage = ADMIN_MODULE_NAME.'_test.php';
 
@@ -13,14 +13,14 @@ $obAdminList->AddHeaders();
 
 $dbElements = Test::getList();
 while($arElement = $dbElements->fetch()) {
-	$row = $obAdminList->AddRow($arElement['ID'], $arElement);
+	$row = $obAdminList->AddRow($arElement['id'], $arElement);
 	
 	$row->AddActions([
 		[
 			'ICON' => 'list',
 			'TEXT' => 'Список упражнений',
 			'ACTION' => $obAdminList->ActionRedirect(ADMIN_MODULE_NAME.'_exercises.php?'.http_build_query([
-				'id' => $arElement['ID'],
+				'id' => $arElement['id'],
 			])),
 			'DEFAULT' => true,
 		],
@@ -28,7 +28,7 @@ while($arElement = $dbElements->fetch()) {
 			'ICON' => 'edit',
 			'TEXT' => GetMessage('MAIN_ADMIN_MENU_EDIT'),
 			'ACTION' => $obAdminList->ActionRedirect($elementPage.'?'.http_build_query([
-				'id' => $arElement['ID'],
+				'id' => $arElement['id'],
 				'action' => 'edit',
 			]))
 		],
@@ -36,7 +36,7 @@ while($arElement = $dbElements->fetch()) {
 			'ICON' => 'delete',
 			'TEXT' => GetMessage('MAIN_ADMIN_MENU_DELETE'),
 			'ACTION' => $obAdminList->ActionRedirect($elementPage.'?'.http_build_query([
-				'id' => $arElement['ID'],
+				'id' => $arElement['id'],
 				'sessid' => bitrix_sessid(),
 				'action' => 'delete',
 			]))
