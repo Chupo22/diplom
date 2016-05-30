@@ -95,7 +95,9 @@ class Setup{
 		$arFields = [
 			'LOGIN' => $login,
 			'PASSWORD' => 'tester',
-			'EMAIL' => 'test@test.ru'
+			'EMAIL' => 'test@test.ru',
+			'NAME' => 'Иван',
+			'LAST_NAME' => 'Иванов',
 		];
 		if(!$arUser)
 			$USER->Add($arFields);

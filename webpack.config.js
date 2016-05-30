@@ -16,8 +16,8 @@ switch(build){
 		break;
 	default:
 		config.entry.bundle = "./local/templates/main/index.js";
-		config.output.path = __dirname + "/local/templates/main/";
-		config.output.publicPath = "/local/templates/main/";
+		config.output.path = __dirname + "/local/templates/main/build";
+		config.output.publicPath = "/local/templates/main/build";
 		break;
 }
 

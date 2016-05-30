@@ -20,7 +20,7 @@ class CAdminList extends \CAdminList{
 				continue;
 			
 			$fieldName = $obField->getName();
-			$arHeaders[] = ['id' => $fieldName, 'content' => $fieldName, 'sort' => $fieldName, 'default' => true];
+			$arHeaders[] = ['id' => $fieldName, 'content' => $fieldName, 'sort' => '123', 'default' => true];
 		}
 		parent::AddHeaders($arHeaders);
 	}
