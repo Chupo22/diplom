@@ -8,6 +8,7 @@ import {UserExercise} from 'user-exercise';
 import helpers = require('helpers');
 import $ = require('jquery');
 import {ICompletion} from "sql-editor";
+require('!style!css!autoprefixer?browsers=last 2 versions!csso!../../../../../../../node_modules/highlight.js/styles/default.css');
 
 export interface ITable{
 	name: string

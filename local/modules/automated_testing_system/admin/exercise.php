@@ -44,7 +44,7 @@ if (($_REQUEST['save'] || $_REQUEST['apply']) && check_bitrix_sessid()){
 }
 
 require_once 'prolog_after.php';
-$APPLICATION->AddHeadScript('/local/modules/automated_testing_system/bundle.js');
+$APPLICATION->AddHeadScript(\Helpers\Tools::getTemplateAsset('js')); //todo-sem вынести
 
 if(!$obAdminItem->arErrors):
 	(new CAdminContextMenu([

@@ -2,6 +2,7 @@
 import React = require('react');
 import ReactDOM = require('react-dom');
 import $ = require('jquery');
+require('!style!css!autoprefixer?browsers=last 2 versions!csso!./style.css');
 
 export interface IState {
 	login?: string

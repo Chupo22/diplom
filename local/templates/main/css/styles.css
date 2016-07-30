@@ -21,7 +21,7 @@ img {border: 0; }
 
 html, body, .site {height: 100%;}
 /* картинку можно взять отсюда /local/templates/main/images/cloud-bar.png */
-body {margin: 0; font-family: "SourceSansProRegular", sans-serif; font-size: 16px;padding-top: 10px;color: #525252;}
+body {margin: 0; font-family: "SourceSansProRegular", sans-serif; font-size: 16px;padding-top: 10px;color: #525252;background: #fff url('../images/cloud-bar.png') repeat-x;}
 .main_width {width:1170px;margin:0 auto;position:relative;}
 /*header*/
 
