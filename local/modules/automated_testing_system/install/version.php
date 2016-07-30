@@ -1,7 +1,9 @@
 <?
+use ATSModule\Info;
+
 $arModuleVersion = [
-	"VERSION" => "0.0.4",
-	"VERSION_DATE" => "2016-03-09 22:44:00",
-	"MODULE_NAME" => "Автоматизированная система тестирования",
-	"MODULE_DESCRIPTION" => "Модуль автоматизированной системы тестирования"
+	'VERSION' => Info::$VERSION,
+	'VERSION_DATE' => Info::$VERSION_DATE,
+	'MODULE_NAME' => Info::$MODULE_NAME,
+	'MODULE_DESCRIPTION' => Info::$MODULE_DESCRIPTION
 ];

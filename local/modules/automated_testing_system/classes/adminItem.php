@@ -5,7 +5,7 @@ use AutomatedTestingSystem\ORM\TestTable as Test;
 use AutomatedTestingSystem\ORM\ExerciseTable as Exercise;
 use Bitrix\Main\Entity;
 
-class CAdminItem{
+class AdminItem{
 	/** @var Test | Exercise $class */
 	var $class;
 	var $arItem;

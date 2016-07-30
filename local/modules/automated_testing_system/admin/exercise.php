@@ -1,13 +1,13 @@
 <?require_once 'prolog_before.php';
 IncludeModuleLangFile(__FILE__);
 
-use ATSModule\CAdminItem;
+use ATSModule\AdminItem;
 use ATSModule\Tools as ModuleTools;
 use AutomatedTestingSystem\ORM\ConditionTable;
 use AutomatedTestingSystem\ORM\ExerciseTable as Exercise;
 use AutomatedTestingSystem\ORM\TaskTable as Task;
 
-$obAdminItem = new CAdminItem(new Exercise);
+$obAdminItem = new AdminItem(new Exercise);
 
 $backUrl = ADMIN_MODULE_NAME.'_tests.php?lang='.LANGUAGE_ID;
 

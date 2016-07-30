@@ -1,12 +1,15 @@
 <?
 global $MESS;
+use ATSModule\Info;
+
 $PathInstall = str_replace("\\", "/", __FILE__);
+include_once substr(__FILE__, 0, strlen(__FILE__) - strlen("/install/index.php")).'/info.php';
 $PathInstall = substr($PathInstall, 0, strlen($PathInstall)-strlen('/index.php'));
 IncludeModuleLangFile($PathInstall.'/install.php');
  
-if(class_exists('automated_testing_system')) return;
+if(class_exists(Info::$MODULE_ID)) return;
 class automated_testing_system extends CModule {
-	var $MODULE_ID = 'automated_testing_system';
+	var $MODULE_ID;
 	var $MODULE_VERSION;
 	var $MODULE_VERSION_DATE;
 	var $MODULE_NAME;
@@ -20,20 +23,20 @@ class automated_testing_system extends CModule {
 		global $DOCUMENT_ROOT;
 		
 		$arModuleVersion = [];
-		$MODULE_PATH = $DOCUMENT_ROOT.getLocalPath('modules/'.$this->MODULE_ID);
 		
-		include_once($MODULE_PATH.'/defines.php');
 		
-		$this->MODULE_INSTALL_PATH = $MODULE_PATH.'/install';
-		$this->BX_INSTALL_PATH = $DOCUMENT_ROOT."/".Bitrix\Main\Loader::BITRIX_HOLDER;
-        include($this->MODULE_INSTALL_PATH . '/version.php');
-
-        if (is_array($arModuleVersion) && array_key_exists('VERSION', $arModuleVersion)) {
-            $this->MODULE_VERSION = $arModuleVersion['VERSION'];
-            $this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
-            $this->MODULE_NAME = $arModuleVersion['MODULE_NAME'];
-            $this->MODULE_DESCRIPTION = $arModuleVersion['MODULE_DESCRIPTION'];
-        }
+		
+		/** @noinspection PhpIncludeInspection */
+		include_once(Info::$MODULE_PATH.'/defines.php');
+		
+		$this->MODULE_INSTALL_PATH = Info::$MODULE_PATH.'/install';
+		$this->BX_INSTALL_PATH = $DOCUMENT_ROOT.'/'.Bitrix\Main\Loader::BITRIX_HOLDER;
+		
+		$this->MODULE_ID = Info::$MODULE_ID;
+		$this->MODULE_VERSION = Info::$VERSION;
+		$this->MODULE_VERSION_DATE = Info::$VERSION_DATE;
+		$this->MODULE_NAME = Info::$MODULE_NAME;
+		$this->MODULE_DESCRIPTION = Info::$MODULE_DESCRIPTION;
 	}
 	function DoInstall() {
 		global $APPLICATION;

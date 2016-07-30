@@ -1,13 +1,13 @@
 <?require_once 'prolog_before.php';
 IncludeModuleLangFile(__FILE__);
 
-use ATSModule\CAdminList;
+use ATSModule\AdminList;
 use ATSModule\Tools as ModuleTools;
 use AutomatedTestingSystem\ORM\TestTable as Test;
 
 $elementPage = ADMIN_MODULE_NAME.'_test.php';
 
-$obAdminList = new CAdminList(new Test);
+$obAdminList = new AdminList(new Test);
 
 $obAdminList->AddHeaders();
 

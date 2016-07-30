@@ -3,7 +3,7 @@
 use AutomatedTestingSystem\ORM\TestTable as Test;
 use AutomatedTestingSystem\ORM\ExerciseTable as Exercise;
 
-class CAdminList extends \CAdminList{
+class AdminList extends \CAdminList{
 	/** @var Test | Exercise $class */
 	var $class;
 	function __construct($class, $arSort = ['id' => 'asc']) {
