@@ -69,6 +69,7 @@ export class Editor extends React.Component<IProps, IState> {
 	
 	render() {
 		return <SqlEditor 
+			editorProps={{$blockScrolling:Infinity}}
 			mode="mysql"
 			theme="chrome"
 			name="test-sql-editor"
